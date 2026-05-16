@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Gün 3 — Proje Pratiği + Mock Sınav</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; padding: 30px; max-width: 960px; margin: auto; }
+  h1 { color: #fca5a5; font-size: 1.7em; margin-bottom: 4px; }
+  .day-sub { color: #475569; font-size: 0.88em; margin-bottom: 30px; }
+  h2 { font-size: 1.15em; color: #f6c90e; margin: 30px 0 12px; padding-bottom: 6px; border-bottom: 1px solid #1e2736; }
+  h3 { font-size: 0.97em; color: #fca5a5; margin: 18px 0 8px; }
+  p, li { color: #94a3b8; font-size: 0.9em; line-height: 1.75; }
+  ul { padding-left: 20px; margin-bottom: 10px; }
+  li { margin-bottom: 4px; }
+  code { background: #1e2736; color: #fca5a5; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'Courier New', monospace; }
+
+  .code-block { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 10px; padding: 16px 20px; margin: 12px 0; overflow-x: auto; }
+  .code-block pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.88em; line-height: 1.7; white-space: pre; }
+  .keyword { color: #818cf8; font-weight: bold; }
+  .string { color: #86efac; }
+  .comment { color: #475569; font-style: italic; }
+  .type { color: #f9a8d4; }
+  .method { color: #67e8f9; }
+  .generic { color: #fde68a; }
+  .output-line { color: #fde68a; font-weight: 700; }
+
+  .alert { border-radius: 8px; padding: 12px 16px; margin: 14px 0; font-size: 0.88em; line-height: 1.7; }
+  .alert-red { background: #1c0a0a; border-left: 3px solid #ef4444; color: #fca5a5; }
+  .alert-yellow { background: #1c1208; border-left: 3px solid #f59e0b; color: #fde68a; }
+  .alert-green { background: #0a1c0e; border-left: 3px solid #22c55e; color: #86efac; }
+
+  .section-num { display: inline-block; background: #7f1d1d; color: #fca5a5; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.85em; margin-right: 8px; }
+
+  /* MOCK SINAV */
+  .mock-section { background: #1a1f2e; border-radius: 14px; padding: 20px; margin: 16px 0; border: 1px solid #374151; }
+  .mock-section h3 { color: #f6c90e; margin-bottom: 14px; border-bottom: 1px solid #2d3748; padding-bottom: 8px; }
+  .mock-q { background: #0f1117; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+  .mock-q .qnum { color: #94a3b8; font-size: 0.78em; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; }
+  .mock-q .qtext { color: #e2e8f0; font-size: 0.92em; line-height: 1.6; margin-bottom: 10px; }
+  .mock-q .options { list-style: none; padding: 0; }
+  .mock-q .options li { color: #94a3b8; font-size: 0.88em; padding: 5px 10px; border-radius: 6px; margin-bottom: 4px; cursor: default; }
+  .answer-reveal { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #2d3748; }
+  .answer-reveal details summary { color: #818cf8; font-size: 0.82em; cursor: pointer; }
+  .answer-reveal details[open] .ans { color: #86efac; font-size: 0.85em; margin-top: 8px; line-height: 1.6; }
+
+  .fill-box { background: #0f1117; border: 1px dashed #3730a3; border-radius: 8px; padding: 14px; margin: 12px 0; }
+  .fill-box .code-area { font-family: 'Courier New', monospace; font-size: 0.88em; color: #94a3b8; line-height: 1.8; }
+  .fill-box .blank { display: inline-block; min-width: 120px; border-bottom: 2px solid #818cf8; margin: 0 4px; color: #818cf8; font-style: italic; }
+  .output-box { background: #0a0d14; border: 1px solid #1e2736; border-radius: 6px; padding: 10px 14px; font-family: monospace; color: #fde68a; font-size: 0.9em; margin: 8px 0; }
+
+  .checklist { list-style: none; padding: 0; }
+  .checklist li { padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; background: #1a1f2e; font-size: 0.88em; display: flex; align-items: flex-start; gap: 10px; }
+  .checklist li::before { content: "☐"; color: #818cf8; font-size: 1.1em; flex-shrink: 0; margin-top: 1px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>📕 Gün 3 — Proje Pratiği + Mock Sınav</h1>
+<p class="day-sub">Generic class tasarımı · Exception yazma · Tam sınav simülasyonu · 5 Saat</p>
+
+<!-- BÖLÜM 1 -->
+<h2><span class="section-num">1</span> Dictionary.java — Final Projesi Şablonu</h2>
+<p>Aşağıdaki şablonu <strong>sıfırdan, şablona bakmadan</strong> yaz. Sonra karşılaştır.</p>
+
+<div class="code-block"><pre>
+<span class="keyword">import</span> java.util.*;
+
+<span class="comment">// ========= KeyNotFoundException =========</span>
+<span class="keyword">class</span> <span class="type">KeyNotFoundException</span> <span class="keyword">extends</span> <span class="type">RuntimeException</span> {
+    <span class="keyword">private</span> <span class="type">Object</span> key;
+
+    <span class="keyword">public</span> <span class="method">KeyNotFoundException</span>(<span class="type">Object</span> key) {
+        <span class="keyword">this</span>.key = key;
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+        <span class="keyword">return</span> <span class="string">"KeyNotFoundException Key = "</span> + key;
+    }
+}
+
+<span class="comment">// ========= Dictionary (Version 1 — HashMap ile) =========</span>
+<span class="keyword">public class</span> <span class="type">Dictionary</span><<span class="generic">K</span>, <span class="generic">V</span>> {
+    <span class="keyword">private</span> Map<<span class="generic">K</span>, <span class="generic">V</span>> map;
+
+    <span class="keyword">public</span> <span class="method">Dictionary</span>() {
+        map = <span class="keyword">new</span> LinkedHashMap<<span class="generic">K</span>, <span class="generic">V</span>>(); <span class="comment">// LinkedHashMap sırayı korur</span>
+    }
+
+    <span class="keyword">public</span> <span class="generic">V</span> <span class="method">get</span>(<span class="generic">K</span> key) {
+        <span class="keyword">if</span> (!map.containsKey(key)) <span class="keyword">throw new</span> <span class="type">KeyNotFoundException</span>(key);
+        <span class="keyword">return</span> map.get(key);
+    }
+
+    <span class="keyword">public void</span> <span class="method">update</span>(<span class="generic">K</span> key, <span class="generic">V</span> value) {
+        map.put(key, value); <span class="comment">// put: varsa günceller, yoksa ekler</span>
+    }
+
+    <span class="keyword">public</span> <span class="type">Dictionary</span><<span class="generic">K</span>, <span class="generic">V</span>> <span class="method">copy</span>() {
+        Dictionary<<span class="generic">K</span>, <span class="generic">V</span>> newDict = <span class="keyword">new</span> Dictionary<<span class="generic">K</span>, <span class="generic">V</span>>();
+        newDict.map.putAll(<span class="keyword">this</span>.map);
+        <span class="keyword">return</span> newDict;
+    }
+
+    <span class="keyword">public</span> Collection<<span class="generic">K</span>> <span class="method">keys</span>() {
+        <span class="keyword">return</span> map.keySet();
+    }
+
+    <span class="keyword">public void</span> <span class="method">clear</span>() {
+        map.clear();
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+        <span class="keyword">return</span> map.toString(); <span class="comment">// Otomatik {K=V, K=V} formatı verir!</span>
+    }
+}
+</pre></div>
+
+<div class="alert alert-yellow">
+  💡 <strong>Version 2 (ArrayList tabanlı):</strong> Hoca iki versiyon istiyor. Version 2'de HashMap/TreeMap kullanma. Bunun yerine iki ArrayList tut: <code>ArrayList&lt;K&gt; keys</code> ve <code>ArrayList&lt;V&gt; values</code>. Aynı index'teki key-value eşli. get() için linear search yap.
+</div>
+
+<h3>Sıfırdan Yazma Kontrol Listesi</h3>
+<ul class="checklist">
+  <li>KeyNotFoundException extends RuntimeException yazıldı mı?</li>
+  <li>KeyNotFoundException constructor'ı Object key parametre alıyor mu?</li>
+  <li>KeyNotFoundException toString() "KeyNotFoundException Key = " + key formatında mı?</li>
+  <li>Dictionary class'ı &lt;K, V&gt; generic parametreli mi?</li>
+  <li>get() → key yoksa exception fırlatıyor mu?</li>
+  <li>update() → hem ekleme hem güncelleme için aynı metod mu?</li>
+  <li>copy() → derin kopya mı yapıyor?</li>
+  <li>keys() → Collection döndürüyor mu?</li>
+  <li>toString() → {K=V, K=V} formatı mı?</li>
+</ul>
+
+<!-- BÖLÜM 2 -->
+<h2><span class="section-num">2</span> University.java — Bütünleme Projesi Şablonu</h2>
+
+<div class="code-block"><pre>
+<span class="keyword">import</span> java.util.*;
+
+<span class="comment">// ========= StudentNotFoundException =========</span>
+<span class="keyword">class</span> <span class="type">StudentNotFoundException</span> <span class="keyword">extends</span> <span class="type">RuntimeException</span> {
+    <span class="keyword">private</span> <span class="type">Object</span> student;
+    <span class="keyword">public</span> <span class="method">StudentNotFoundException</span>(<span class="type">Object</span> s) { student = s; }
+    @Override
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+        <span class="keyword">return</span> <span class="string">"StudentNotFoundException - Student = "</span> + student;
+    }
+}
+
+<span class="comment">// ========= CourseNotFoundException =========</span>
+<span class="keyword">class</span> <span class="type">CourseNotFoundException</span> <span class="keyword">extends</span> <span class="type">RuntimeException</span> {
+    <span class="keyword">private</span> <span class="type">Object</span> course;
+    <span class="keyword">public</span> <span class="method">CourseNotFoundException</span>(<span class="type">Object</span> c) { course = c; }
+    @Override
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+        <span class="keyword">return</span> <span class="string">"CourseNotFoundException - Course = "</span> + course;
+    }
+}
+
+<span class="comment">// ========= University&lt;S, C, G&gt; =========</span>
+<span class="keyword">public class</span> <span class="type">University</span><<span class="generic">S</span>, <span class="generic">C</span>, <span class="generic">G</span>> {
+    <span class="keyword">private</span> <span class="type">String</span> name;
+    <span class="keyword">private</span> Map<<span class="generic">S</span>, Map<<span class="generic">C</span>, <span class="generic">G</span>>> data;  <span class="comment">// öğrenci → {ders → not}</span>
+
+    <span class="keyword">public</span> <span class="method">University</span>(<span class="type">String</span> name) {
+        <span class="keyword">this</span>.name = name;
+        data = <span class="keyword">new</span> LinkedHashMap<<span class="generic">S</span>, Map<<span class="generic">C</span>, <span class="generic">G</span>>>();
+    }
+
+    <span class="keyword">public</span> <span class="method">University</span>() {
+        <span class="keyword">this</span>(<span class="string">"Unnamed University"</span>); <span class="comment">// default isim</span>
+    }
+
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">getName</span>() { <span class="keyword">return</span> name; }
+
+    <span class="keyword">public void</span> <span class="method">register</span>(<span class="generic">S</span> student, <span class="generic">C</span> course) {
+        data.putIfAbsent(student, <span class="keyword">new</span> LinkedHashMap<<span class="generic">C</span>, <span class="generic">G</span>>());
+        data.get(student).put(course, <span class="keyword">null</span>); <span class="comment">// not henüz verilmedi</span>
+    }
+
+    <span class="keyword">public void</span> <span class="method">grade</span>(<span class="generic">S</span> student, <span class="generic">C</span> course, <span class="generic">G</span> grade) {
+        <span class="keyword">if</span> (!data.containsKey(student))
+            <span class="keyword">throw new</span> <span class="type">StudentNotFoundException</span>(student);
+        <span class="keyword">if</span> (!data.get(student).containsKey(course))
+            <span class="keyword">throw new</span> <span class="type">CourseNotFoundException</span>(course);
+        data.get(student).put(course, grade);
+    }
+
+    <span class="keyword">public</span> Collection<<span class="generic">S</span>> <span class="method">students</span>(<span class="generic">C</span> course) {
+        List<<span class="generic">S</span>> result = <span class="keyword">new</span> ArrayList<<span class="generic">S</span>>();
+        <span class="keyword">for</span> (Map.Entry<<span class="generic">S</span>, Map<<span class="generic">C</span>, <span class="generic">G</span>>> e : data.entrySet()) {
+            <span class="keyword">if</span> (e.getValue().containsKey(course)) result.add(e.getKey());
+        }
+        <span class="keyword">return</span> result;
+    }
+
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">transcript</span>(<span class="generic">S</span> student) {
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        sb.append(<span class="string">"Transcript for Student "</span> + student + <span class="string">"\n"</span>);
+        <span class="keyword">for</span> (Map.Entry<<span class="generic">C</span>, <span class="generic">G</span>> e : data.get(student).entrySet()) {
+            <span class="type">String</span> g = (e.getValue() == <span class="keyword">null</span>) ? <span class="string">"N/A"</span> : e.getValue().toString();
+            sb.append(e.getKey() + <span class="string">" - "</span> + g + <span class="string">"\n"</span>);
+        }
+        <span class="keyword">return</span> sb.toString().trim();
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+        StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+        sb.append(name + <span class="string">" information\n"</span>);
+        <span class="keyword">for</span> (<span class="generic">S</span> s : data.keySet()) sb.append(transcript(s) + <span class="string">"\n"</span>);
+        <span class="keyword">return</span> sb.toString().trim();
+    }
+}
+</pre></div>
+
+<div class="alert alert-red">
+  ⚠️ <strong>Dikkat:</strong> Bütünleme projesinde <strong>üç</strong> generic type parametre var: S (student), C (course), G (grade). Hem <code>University&lt;Long, String, Integer&gt;</code> hem de <code>University&lt;String, Integer, String&gt;</code> ile çalışabilmeli!
+</div>
+
+<!-- BÖLÜM 3 — MOCK SINAV -->
+<h2><span class="section-num">3</span> 🎯 Mock Sınav — Bölüm 1: Kavramsal Sorular</h2>
+<p style="color:#f59e0b; margin-bottom:16px;">⏱️ Süreyi tut — bu bölüm için 25 dakika. Önce cevapla, sonra aç.</p>
+
+<div class="mock-section">
+  <h3>True / False</h3>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 1</div>
+    <div class="qtext"><code>ArrayList&lt;double&gt; list = new ArrayList&lt;double&gt;();</code> — This will have a compile error.</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">✅ TRUE — double primitive type, generic'te kullanılamaz. Double kullanılmalı.</div></details></div>
+  </div>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 2</div>
+    <div class="qtext">A Stack is a type of First In First Out data structure.</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">❌ FALSE — Stack LIFO'dur (Last In First Out). FIFO olan Queue'dur.</div></details></div>
+  </div>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 3</div>
+    <div class="qtext">An interface can have concrete (non-abstract) methods.</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">⚠️ Dikkatli ol — Java 8+ ile <code>default</code> methodlar eklenebilir. Ama klasik anlamda sadece abstract + constants → FALSE. Bu derste büyük ihtimalle FALSE kabul edilir.</div></details></div>
+  </div>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 4</div>
+    <div class="qtext">The <code>toString()</code> method in the Object class is called automatically when an object is passed to <code>println()</code>.</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">✅ TRUE — println() objeden otomatik toString() çağırır.</div></details></div>
+  </div>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 5</div>
+    <div class="qtext">A class with no abstract methods can still be declared as abstract.</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">✅ TRUE — abstract class'ın abstract method zorunluluğu yoktur. Soyut sınıf tanımlamak için yeterli.</div></details></div>
+  </div>
+</div>
+
+<div class="mock-section">
+  <h3>Multiple Choice — Hepsini İşaretle</h3>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 6</div>
+    <div class="qtext">Which of the following are true about a HashMap? (Choose all correct)</div>
+    <ul class="options">
+      <li>a. Keys must be unique</li>
+      <li>b. Values must be unique</li>
+      <li>c. Maintains insertion order</li>
+      <li>d. Allows null keys</li>
+      <li>e. get() and put() are O(1) on average</li>
+    </ul>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">✅ a, d, e — Key unique olmalı. Value tekrar edebilir. LinkedHashMap sıra korur, HashMap korumaz. HashMap null key alır.</div></details></div>
+  </div>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 7</div>
+    <div class="qtext">Which of the following is a checked exception?</div>
+    <ul class="options">
+      <li>a. NullPointerException</li>
+      <li>b. ArrayIndexOutOfBoundsException</li>
+      <li>c. IOException</li>
+      <li>d. RuntimeException</li>
+    </ul>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">✅ c — IOException checked. Diğerleri unchecked (RuntimeException veya alt sınıfları).</div></details></div>
+  </div>
+</div>
+
+<!-- BÖLÜM 4 — Hata Bulma -->
+<h2><span class="section-num">4</span> 🎯 Mock Sınav — Bölüm 2: Hata Bulma</h2>
+
+<div class="mock-section">
+  <h3>Compiler Error Analizi</h3>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 8 — Hata neden var? Kısaca açıkla.</div>
+    <div class="code-block" style="margin:10px 0;"><pre>
+<span class="keyword">class</span> <span class="type">Vehicle</span> {
+    <span class="type">String</span> brand;
+    <span class="keyword">public</span> <span class="method">Vehicle</span>(<span class="type">String</span> brand) {
+        <span class="keyword">this</span>.brand = brand;
+    }
+}
+
+<span class="keyword">class</span> <span class="type">Car</span> <span class="keyword">extends</span> <span class="type">Vehicle</span> {
+    <span class="type">int</span> doors;
+    <span class="keyword">public</span> <span class="method">Car</span>(<span class="type">int</span> doors) {
+        <span class="keyword">this</span>.doors = doors;
+    }
+}</pre></div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">
+      <strong>Hata:</strong> Vehicle sınıfının sadece String parametreli constructor'ı var, no-arg constructor yok. Car extends Vehicle yapıyor ve Car'ın constructor'ı otomatik olarak super() çağırıyor ama bu constructor Vehicle'da mevcut değil.<br><br>
+      <strong>Çözüm:</strong> Car'ın constructor'ına <code>super("Unknown");</code> ekle veya Vehicle'a no-arg constructor ekle.
+    </div></details></div>
+  </div>
+
+  <div class="mock-q">
+    <div class="qnum">Soru 9 — Düzeltilmiş Car constructor'ını yaz</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">
+      <strong>Çözüm 1:</strong><br>
+      <code>public Car(int doors) { super("Unknown"); this.doors = doors; }</code><br><br>
+      <strong>Çözüm 2:</strong> Vehicle'a no-arg constructor ekle:<br>
+      <code>public Vehicle() { this.brand = "Unknown"; }</code>
+    </div></details></div>
+  </div>
+</div>
+
+<!-- BÖLÜM 5 — Fill in the Blanks -->
+<h2><span class="section-num">5</span> 🎯 Mock Sınav — Bölüm 3: Fill in the Blanks (En Ağır Bölüm)</h2>
+<p style="color:#f59e0b; margin-bottom:16px;">⏱️ Bu bölüm için 30 dakika. Her soruyu elle çöz, sonra açıkla.</p>
+
+<div class="mock-section">
+  <h3>Senaryo — Aynı Hoca Tarzı</h3>
+  <p>Aşağıdaki kodu 3 farklı öğrenciye verdim. Boşlukları doldurmalarını istedim. Sadece String class veya kendi yazdıkları <code>MyClass</code> adında bir class kullanabilirler.</p>
+  <div class="code-block"><pre>
+<span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String[]</span> args) {
+    <span class="fill-blank">_____________</span> refVar1 = <span class="fill-blank">_____________</span>;
+    <span class="fill-blank">_____________</span> refVar2 = <span class="fill-blank">_____________</span>;
+    System.out.println(refVar1 == refVar2);
+    System.out.println(refVar1.equals(refVar2));
+}</pre></div>
+
+  <div class="mock-q" style="margin-top:14px;">
+    <div class="qnum">Öğrenci 1 — Output:</div>
+    <div class="output-box">false<br>true</div>
+    <div>Boşlukları doldur:</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">
+      String refVar1 = new String("hello");<br>
+      String refVar2 = new String("hello");<br>
+      (Farklı objeler, aynı içerik → == false, equals true)
+    </div></details></div>
+  </div>
+
+  <div class="mock-q" style="margin-top:10px;">
+    <div class="qnum">Öğrenci 2 — Output:</div>
+    <div class="output-box">true<br>true</div>
+    <div>Boşlukları doldur:</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">
+      String refVar1 = new String("hello");<br>
+      String refVar2 = refVar1;<br>
+      (Aynı referans → == true, equals true)
+    </div></details></div>
+  </div>
+
+  <div class="mock-q" style="margin-top:10px;">
+    <div class="qnum">Öğrenci 3 — Output:</div>
+    <div class="output-box">true<br>false</div>
+    <div>Boşlukları doldur. Bu öğrenci kesinlikle kendi class'ını yazmak zorunda mıydı?</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">
+      <strong>EVET — kesinlikle custom class yazması gerekiyor!</strong><br>
+      String ile true/false mümkün değil (== true → aynı referans → equals da true olur).<br><br>
+      MyClass refVar1 = new MyClass();<br>
+      MyClass refVar2 = refVar1;<br><br>
+      MyClass şöyle yazılabilir:<br>
+      class MyClass {<br>
+      &nbsp;&nbsp;public boolean equals(Object o) { return false; }<br>
+      }
+    </div></details></div>
+  </div>
+
+  <div class="mock-q" style="margin-top:10px;">
+    <div class="qnum">Soru — Öğrenci 3'ün kullandığı MyClass implementasyonunu yaz</div>
+    <div class="answer-reveal"><details><summary>→ Cevabı Göster</summary><div class="ans">
+class MyClass {<br>
+&nbsp;&nbsp;@Override<br>
+&nbsp;&nbsp;public boolean equals(Object obj) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
+&nbsp;&nbsp;}<br>
+}
+    </div></details></div>
+  </div>
+</div>
+
+<!-- BÖLÜM 6 — Final Kontrol -->
+<h2><span class="section-num">6</span> Sınav Öncesi Son Kontrol Listesi</h2>
+
+<div class="two-col">
+  <div>
+    <h3>Bilmen Gereken Kavramlar</h3>
+    <ul class="checklist">
+      <li>== vs .equals() — 4 kombinasyon</li>
+      <li>Abstract class: can/cannot tablosu</li>
+      <li>Interface vs Abstract class farkları</li>
+      <li>Override vs Overload farkı</li>
+      <li>super() constructor zorunluluğu</li>
+      <li>Constructor kuralları (default, overload)</li>
+      <li>ArrayList&lt;int&gt; compile error</li>
+      <li>Queue FIFO, Stack LIFO</li>
+      <li>Queue için hangi yapılar kullanılabilir</li>
+      <li>HashMap metodları: put/get/containsKey/keySet</li>
+      <li>HashSet vs TreeSet vs LinkedHashSet</li>
+      <li>RuntimeException extend custom exception</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Yazabilmen Gereken Kodlar</h3>
+    <ul class="checklist">
+      <li>Generic class tanımla: class X&lt;K, V&gt;</li>
+      <li>KeyNotFoundException extends RuntimeException</li>
+      <li>HashMap ile get/update/copy/keys/toString</li>
+      <li>Nested Map: Map&lt;S, Map&lt;C, G&gt;&gt;</li>
+      <li>putIfAbsent() kullanımı</li>
+      <li>Map.Entry ile iterate</li>
+      <li>null check ile "N/A" gösterme</li>
+      <li>StringBuilder ile transcript oluşturma</li>
+      <li>super() çağrısı doğru şekilde</li>
+      <li>equals() override etme</li>
+      <li>toString() override: {K=V} formatı</li>
+      <li>Student/CourseNotFoundException pattern</li>
+    </ul>
+  </div>
+</div>
+
+<div class="alert alert-green" style="margin-top:24px;">
+  🎯 <strong>Son hatırlatma:</strong> Hoca her sınavda benzer soruları farklı paketlemelerle soruyor. Konulara hakim olduktan sonra sorunun formatı değişse de cevabı bileceksin. Fill-in-the-blanks bölümünde paniklemeden her kombinasyonu düşün.
+</div>
+
+<div style="text-align:center; color:#475569; font-size:0.82em; margin-top:40px; padding-top:20px; border-top: 1px solid #1e2736;">
+  Gün 3 Dökümanı · CSE 102T · Başarılar! 🚀
+</div>
+
+</body>
+</html>

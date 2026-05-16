@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Gün 1 — OOP · Inheritance · Abstract · Exception</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; padding: 30px; max-width: 960px; margin: auto; }
+  h1 { color: #93c5fd; font-size: 1.7em; margin-bottom: 4px; }
+  .day-sub { color: #475569; font-size: 0.88em; margin-bottom: 30px; }
+  h2 { font-size: 1.15em; color: #f6c90e; margin: 30px 0 12px; padding-bottom: 6px; border-bottom: 1px solid #1e2736; }
+  h3 { font-size: 0.97em; color: #a5b4fc; margin: 18px 0 8px; }
+  p, li { color: #94a3b8; font-size: 0.9em; line-height: 1.75; }
+  ul { padding-left: 20px; margin-bottom: 10px; }
+  li { margin-bottom: 4px; }
+  code { background: #1e2736; color: #a5b4fc; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'Courier New', monospace; }
+
+  .code-block { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 10px; padding: 16px 20px; margin: 12px 0; overflow-x: auto; }
+  .code-block pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.88em; line-height: 1.7; white-space: pre; }
+  .keyword { color: #818cf8; font-weight: bold; }
+  .string { color: #86efac; }
+  .comment { color: #475569; font-style: italic; }
+  .output { color: #fde68a; }
+  .type { color: #f9a8d4; }
+  .method { color: #67e8f9; }
+
+  .alert { border-radius: 8px; padding: 12px 16px; margin: 14px 0; font-size: 0.88em; line-height: 1.7; }
+  .alert-red { background: #1c0a0a; border-left: 3px solid #ef4444; color: #fca5a5; }
+  .alert-yellow { background: #1c1208; border-left: 3px solid #f59e0b; color: #fde68a; }
+  .alert-green { background: #0a1c0e; border-left: 3px solid #22c55e; color: #86efac; }
+  .alert-blue { background: #0a1220; border-left: 3px solid #3b82f6; color: #93c5fd; }
+
+  .comparison-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .comparison-table th { background: #1e2736; color: #64748b; font-size: 0.8em; text-transform: uppercase; padding: 10px 14px; text-align: left; }
+  .comparison-table td { padding: 10px 14px; border-bottom: 1px solid #1e2736; font-size: 0.88em; color: #94a3b8; vertical-align: top; }
+  .comparison-table td:first-child { color: #e2e8f0; font-weight: 600; }
+  .yes { color: #86efac; font-weight: 700; }
+  .no { color: #f87171; font-weight: 700; }
+
+  .exercise-box { background: #0f1117; border: 1px solid #3730a3; border-radius: 10px; padding: 18px; margin: 16px 0; }
+  .exercise-box h4 { color: #818cf8; font-size: 0.9em; margin-bottom: 12px; }
+  .exercise-box .q { color: #e2e8f0; font-size: 0.88em; margin-bottom: 8px; font-weight: 600; }
+  .exercise-box .answer { background: #1e2736; border-radius: 6px; padding: 10px; margin-top: 8px; font-size: 0.85em; color: #64748b; }
+  .exercise-box .answer strong { color: #86efac; display: block; margin-bottom: 4px; }
+
+  .section-num { display: inline-block; background: #1e3a5f; color: #93c5fd; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.85em; margin-right: 8px; }
+
+  .combo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .combo-item { background: #1a1f2e; border-radius: 8px; padding: 12px; border: 1px solid #2d3748; }
+  .combo-item .out { font-family: monospace; color: #f6c90e; font-size: 1.1em; font-weight: 700; margin-bottom: 6px; }
+  .combo-item .desc { color: #94a3b8; font-size: 0.82em; line-height: 1.5; }
+  .combo-item .sol { color: #86efac; font-size: 0.82em; margin-top: 6px; font-family: monospace; }
+  .combo-item.special { border-color: #ef4444; }
+  .combo-item.special .out { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>📘 Gün 1 — OOP · Inheritance · Abstract/Interface · Exception</h1>
+<p class="day-sub">Chapter 9, 10, 11, 12, 13 · Toplam 5 Saat · Sınav bölümleri ①②③ için temel</p>
+
+<!-- BÖLÜM 1 -->
+<h2><span class="section-num">1</span> Referans Semantiği: == vs .equals() ⚡ EN KRİTİK KONU</h2>
+<p>Hoca bu soruyu <strong>her sınavda</strong> soruyor. Fill-in-the-blanks bölümünün tamamı buna dayanıyor.</p>
+
+<h3>Temel Ayrım</h3>
+<ul>
+  <li><code>==</code> → iki değişkenin aynı <strong>bellek adresini</strong> (referansı) gösterip göstermediğini kontrol eder</li>
+  <li><code>.equals()</code> → içeriği karşılaştırır (String için değer, custom class için override edilmemişse == gibi davranır)</li>
+</ul>
+
+<div class="code-block"><pre>
+<span class="type">String</span> a = <span class="keyword">new</span> <span class="type">String</span>(<span class="string">"CSE"</span>);   <span class="comment">// Heap'te yeni obje</span>
+<span class="type">String</span> b = <span class="keyword">new</span> <span class="type">String</span>(<span class="string">"CSE"</span>);   <span class="comment">// Heap'te başka yeni obje</span>
+<span class="type">String</span> c = a;                   <span class="comment">// Aynı referans</span>
+
+System.out.println(a == b);      <span class="comment">// false — farklı adres</span>
+System.out.println(a.equals(b)); <span class="comment">// true  — aynı içerik</span>
+System.out.println(a == c);      <span class="comment">// true  — aynı adres</span>
+System.out.println(a.equals(c)); <span class="comment">// true  — aynı içerik</span>
+</pre></div>
+
+<h3>4 Output Kombinasyonu — Ezberle!</h3>
+<div class="combo-grid">
+  <div class="combo-item">
+    <div class="out">false<br>true</div>
+    <div class="desc">Farklı nesneler, aynı içerik</div>
+    <div class="sol">String r1 = new String("x");<br>String r2 = new String("x");</div>
+  </div>
+  <div class="combo-item">
+    <div class="out">true<br>true</div>
+    <div class="desc">Aynı referans</div>
+    <div class="sol">String r1 = new String("x");<br>String r2 = r1;</div>
+  </div>
+  <div class="combo-item">
+    <div class="out">false<br>false</div>
+    <div class="desc">Farklı nesneler, farklı içerik</div>
+    <div class="sol">String r1 = new String("a");<br>String r2 = new String("b");</div>
+  </div>
+  <div class="combo-item special">
+    <div class="out">true<br>false</div>
+    <div class="desc">⚠️ String ile MÜMKÜN DEĞİL!<br>Custom class + equals() override gerektirir</div>
+    <div class="sol">MyClass r1 = new MyClass();<br>MyClass r2 = r1;<br>// equals() → return false;</div>
+  </div>
+</div>
+
+<div class="alert alert-red">
+  ⚠️ <strong>Sınav tuzağı:</strong> <code>true / false</code> çıktısını String ile elde etmek <strong>imkânsızdır</strong>. Aynı adres demek aynı içerik demektir String için. Bu output'u soran sorularda <strong>mutlaka custom class yazmak gerekir</strong> ve equals() metodu false döndürmelidir.
+</div>
+
+<h3>Custom Class ile true/false Üretmek</h3>
+<div class="code-block"><pre>
+<span class="keyword">class</span> <span class="type">MyClass</span> {
+    <span class="keyword">public</span> <span class="type">int</span> value;
+    <span class="keyword">public</span> <span class="method">MyClass</span>(<span class="type">int</span> value) { <span class="keyword">this</span>.value = value; }
+
+    <span class="comment">// equals() override ediyoruz — her zaman false döndürüyor</span>
+    @Override
+    <span class="keyword">public</span> <span class="type">boolean</span> <span class="method">equals</span>(<span class="type">Object</span> obj) {
+        <span class="keyword">return false</span>;
+    }
+}
+
+<span class="comment">// Kullanım:</span>
+<span class="type">MyClass</span> r1 = <span class="keyword">new</span> <span class="type">MyClass</span>(1);
+<span class="type">MyClass</span> r2 = r1;              <span class="comment">// Aynı referans → == true</span>
+System.out.println(r1 == r2);      <span class="comment">// true</span>
+System.out.println(r1.equals(r2)); <span class="comment">// false (override ettik)</span>
+</pre></div>
+
+<div class="exercise-box">
+  <h4>🧪 Pratik Sorular — Sınav Formatında</h4>
+  <div class="q">S1: Aşağıdaki output için refVar1 ve refVar2'yi doldurun:<br>Output: <code>false / true</code></div>
+  <div class="answer"><strong>Cevap:</strong> String refVar1 = new String("hello"); String refVar2 = new String("hello");</div>
+
+  <div class="q" style="margin-top:14px;">S2: Output: <code>true / false</code> — Hangi class'ı yazman gerekir?</div>
+  <div class="answer"><strong>Cevap:</strong> Custom class yaz, equals() metodunu override edip return false yaz. Sonra: MyClass r1 = new MyClass(); MyClass r2 = r1;</div>
+
+  <div class="q" style="margin-top:14px;">S3: <code>Integer r1 = new Integer(1); Integer r2 = r1;</code> → Çıktı nedir?</div>
+  <div class="answer"><strong>Cevap:</strong> == → true (aynı referans), .equals() → true (Integer'ın equals() metodu değeri karşılaştırır, zaten aynı referans)</div>
+</div>
+
+<!-- BÖLÜM 2 -->
+<h2><span class="section-num">2</span> Inheritance & Polymorphism (Ch 11)</h2>
+
+<h3>Temel Kavramlar</h3>
+<ul>
+  <li><strong>extends</strong> — kalıtım için kullanılır: <code>class Dog extends Animal</code></li>
+  <li><strong>super()</strong> — parent class'ın constructor'ını çağırır</li>
+  <li><strong>Override</strong> — parent'taki metodu child'da yeniden yazar (aynı imza)</li>
+  <li><strong>Overload</strong> — aynı sınıfta aynı isimli metod, farklı parametre listesi</li>
+  <li><strong>Polymorphism</strong> — parent tipindeki referans, child nesnesini tutabilir</li>
+</ul>
+
+<div class="alert alert-red">
+  🔴 <strong>En sık yanlış yapılan:</strong> Parent'ın no-arg constructor'ı yoksa, child class compiler'da hata verir. FinalExam → Exam örneği bütünlemede tam bu yüzden çıktı!
+</div>
+
+<div class="code-block"><pre>
+<span class="keyword">class</span> <span class="type">Exam</span> {
+    <span class="type">String</span> name;
+    <span class="keyword">public</span> <span class="method">Exam</span>(<span class="type">String</span> name) { <span class="keyword">this</span>.name = name; }
+    <span class="comment">// No-arg constructor YOK!</span>
+}
+
+<span class="keyword">class</span> <span class="type">FinalExam</span> <span class="keyword">extends</span> <span class="type">Exam</span> {
+    <span class="comment">// ❌ COMPILE ERROR: super() çağırıyor ama Exam'da yok!</span>
+}
+
+<span class="comment">// ✅ ÇÖZÜM: FinalExam'a explicit constructor ekle</span>
+<span class="keyword">class</span> <span class="type">FinalExam</span> <span class="keyword">extends</span> <span class="type">Exam</span> {
+    <span class="keyword">public</span> <span class="method">FinalExam</span>() {
+        <span class="keyword">super</span>(<span class="string">"Final"</span>); <span class="comment">// parent'ın String constructor'ını çağır</span>
+    }
+}
+</pre></div>
+
+<h3>Override vs Overload — Karşılaştırma</h3>
+<table class="comparison-table">
+  <thead><tr><th>Özellik</th><th>Override</th><th>Overload</th></tr></thead>
+  <tbody>
+    <tr><td>İsim</td><td>Aynı</td><td>Aynı</td></tr>
+    <tr><td>Parametre listesi</td><td>Aynı (birebir)</td><td>Farklı (sayı/tip)</td></tr>
+    <tr><td>Return type</td><td>Aynı (veya covariant)</td><td>Farklı olabilir</td></tr>
+    <tr><td>Bulunduğu yer</td><td>Parent + Child</td><td>Aynı class içinde</td></tr>
+    <tr><td>@Override</td><td>Kullanılmalı</td><td>Kullanılmaz</td></tr>
+  </tbody>
+</table>
+
+<div class="code-block"><pre>
+<span class="keyword">class</span> <span class="type">Animal</span> {
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">sound</span>() { <span class="keyword">return</span> <span class="string">"..."</span>; }         <span class="comment">// override edilecek</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">eat</span>() {}                             <span class="comment">// overload örneği</span>
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">eat</span>(<span class="type">String</span> food) {}                  <span class="comment">// overload: farklı parametre</span>
+}
+
+<span class="keyword">class</span> <span class="type">Dog</span> <span class="keyword">extends</span> <span class="type">Animal</span> {
+    @Override
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">sound</span>() { <span class="keyword">return</span> <span class="string">"Woof"</span>; }        <span class="comment">// override: aynı imza</span>
+}
+</pre></div>
+
+<!-- BÖLÜM 3 -->
+<h2><span class="section-num">3</span> Abstract Class & Interface (Ch 13)</h2>
+
+<div class="alert alert-red">
+  🔴 <strong>Sınavda en çok tuzağa düşülen konu!</strong> Her iki sınavda da yanlış yapıldı.
+</div>
+
+<h3>Abstract Class — Doğru ve Yanlış İfadeler</h3>
+<table class="comparison-table">
+  <thead><tr><th>İfade</th><th>Doğru mu?</th></tr></thead>
+  <tbody>
+    <tr><td>Can have abstract methods</td><td><span class="yes">✅ DOĞRU</span></td></tr>
+    <tr><td>Can have non-abstract (concrete) methods</td><td><span class="yes">✅ DOĞRU</span></td></tr>
+    <tr><td>Cannot be instantiated (new ile oluşturulamaz)</td><td><span class="yes">✅ DOĞRU</span></td></tr>
+    <tr><td>Can be extended (extends ile)</td><td><span class="yes">✅ DOĞRU</span></td></tr>
+    <tr><td>Must have abstract methods</td><td><span class="no">❌ YANLIŞ</span></td></tr>
+    <tr><td>Cannot have concrete methods</td><td><span class="no">❌ YANLIŞ</span></td></tr>
+    <tr><td>Cannot have non-abstract methods</td><td><span class="no">❌ YANLIŞ</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Abstract Class vs Interface</h3>
+<table class="comparison-table">
+  <thead><tr><th>Özellik</th><th>Abstract Class</th><th>Interface</th></tr></thead>
+  <tbody>
+    <tr><td>Keyword</td><td><code>abstract class</code></td><td><code>interface</code></td></tr>
+    <tr><td>Kullanım</td><td><code>extends</code></td><td><code>implements</code></td></tr>
+    <tr><td>Concrete method</td><td><span class="yes">✅ Olabilir</span></td><td><span class="no">❌ (default hariç)</span></td></tr>
+    <tr><td>Instance variable</td><td><span class="yes">✅ Olabilir</span></td><td><span class="no">❌ (sadece constants)</span></td></tr>
+    <tr><td>Constructor</td><td><span class="yes">✅ Olabilir</span></td><td><span class="no">❌</span></td></tr>
+    <tr><td>Çoklu miras</td><td><span class="no">❌ (tek extends)</span></td><td><span class="yes">✅ (birden çok implements)</span></td></tr>
+    <tr><td>new ile oluşturma</td><td><span class="no">❌</span></td><td><span class="no">❌</span></td></tr>
+  </tbody>
+</table>
+
+<div class="code-block"><pre>
+<span class="keyword">abstract class</span> <span class="type">Shape</span> {
+    <span class="type">String</span> color;                           <span class="comment">// instance variable olabilir</span>
+    <span class="keyword">public</span> <span class="method">Shape</span>(<span class="type">String</span> c) { color = c; }   <span class="comment">// constructor olabilir</span>
+    <span class="keyword">public abstract</span> <span class="type">double</span> <span class="method">area</span>();          <span class="comment">// abstract method — body yok</span>
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">getColor</span>() { <span class="keyword">return</span> color; } <span class="comment">// concrete method — body var</span>
+}
+
+<span class="keyword">interface</span> <span class="type">Drawable</span> {
+    <span class="type">int</span> MAX = 100;                           <span class="comment">// constant (public static final)</span>
+    <span class="type">void</span> <span class="method">draw</span>();                             <span class="comment">// abstract method (implicit)</span>
+}
+
+<span class="keyword">class</span> <span class="type">Circle</span> <span class="keyword">extends</span> <span class="type">Shape</span> <span class="keyword">implements</span> <span class="type">Drawable</span> {
+    <span class="type">double</span> radius;
+    <span class="keyword">public</span> <span class="method">Circle</span>(<span class="type">double</span> r, <span class="type">String</span> c) { <span class="keyword">super</span>(c); radius = r; }
+    @Override <span class="keyword">public</span> <span class="type">double</span> <span class="method">area</span>() { <span class="keyword">return</span> Math.PI * radius * radius; }
+    @Override <span class="keyword">public</span> <span class="type">void</span> <span class="method">draw</span>() { System.out.println(<span class="string">"Circle"</span>); }
+}
+</pre></div>
+
+<div class="exercise-box">
+  <h4>🧪 Pratik Sorular — Abstract Class</h4>
+  <div class="q">S1: True/False — "An abstract class never has concrete methods"</div>
+  <div class="answer"><strong>FALSE</strong> — Abstract class hem abstract hem concrete methodlara sahip olabilir</div>
+
+  <div class="q" style="margin-top:14px;">S2: Abstract class ile Interface arasındaki en temel fark nedir?</div>
+  <div class="answer"><strong>Abstract class</strong>: instance variable ve concrete method içerebilir, sadece bir tane extend edilebilir.<br><strong>Interface</strong>: sadece constants ve abstract methodlar (Java 8 öncesi), birden fazla implement edilebilir.</div>
+
+  <div class="q" style="margin-top:14px;">S3: Match the term: "A classlike construct that contains only constants and abstract methods"</div>
+  <div class="answer"><strong>Interface</strong></div>
+</div>
+
+<!-- BÖLÜM 4 -->
+<h2><span class="section-num">4</span> Exception Handling & Custom Exception (Ch 12)</h2>
+
+<h3>Exception Hiyerarşisi</h3>
+<div class="code-block"><pre>
+Throwable
+├── Error (JVM hataları — yakalamaya çalışma)
+└── Exception
+    ├── IOException (checked)
+    ├── SQLException (checked)
+    └── RuntimeException (unchecked — yakalamak zorunda değilsin)
+        ├── NullPointerException
+        ├── ArrayIndexOutOfBoundsException
+        └── <span class="comment">// Bizim custom exception'larımız buraya gider</span>
+</pre></div>
+
+<h3>Custom Exception — Sınav Projesi Şablonu</h3>
+<p>Her sınav projesinde custom exception istendiğini hatırla!</p>
+<div class="code-block"><pre>
+<span class="comment">// Şablon — her sınav projesinde bu pattern kullanılıyor</span>
+<span class="keyword">class</span> <span class="type">KeyNotFoundException</span> <span class="keyword">extends</span> <span class="type">RuntimeException</span> {
+    <span class="keyword">private</span> <span class="type">Object</span> key;
+
+    <span class="keyword">public</span> <span class="method">KeyNotFoundException</span>(<span class="type">Object</span> key) {
+        <span class="keyword">this</span>.key = key;
+    }
+
+    @Override
+    <span class="keyword">public</span> <span class="type">String</span> <span class="method">toString</span>() {
+        <span class="keyword">return</span> <span class="string">"KeyNotFoundException Key = "</span> + key;
+    }
+}
+
+<span class="comment">// Kullanım:</span>
+<span class="keyword">public</span> <span class="type">V</span> <span class="method">get</span>(<span class="type">K</span> key) {
+    <span class="keyword">if</span> (!map.containsKey(key)) {
+        <span class="keyword">throw new</span> <span class="type">KeyNotFoundException</span>(key);
+    }
+    <span class="keyword">return</span> map.get(key);
+}
+
+<span class="comment">// Yakalama:</span>
+<span class="keyword">try</span> {
+    dict.get(<span class="string">"missing"</span>);
+} <span class="keyword">catch</span> (<span class="type">RuntimeException</span> ex) {
+    System.out.println(ex); <span class="comment">// KeyNotFoundException Key = missing</span>
+}
+</pre></div>
+
+<div class="alert alert-yellow">
+  💡 <strong>Hatırlatma:</strong> RuntimeException'dan extend edilen exception'lar <strong>unchecked</strong> — throws declaration zorunlu değil. Bütünleme projesinde StudentNotFoundException ve CourseNotFoundException da bu şablonu takip etti.
+</div>
+
+<!-- BÖLÜM 5 -->
+<h2><span class="section-num">5</span> OOP Terminoloji Özeti — Eşleştirme Sorusu İçin</h2>
+
+<table class="comparison-table">
+  <thead><tr><th>Terim</th><th>Tanım (sınavda verilen)</th></tr></thead>
+  <tbody>
+    <tr><td><code>Override</code></td><td>Two methods with the same name, return type, and parameter list. One exists in a parent class but the other modifies the implementation.</td></tr>
+    <tr><td><code>Overload</code></td><td>Two methods with the same name and return type but different parameter lists. Can be in the same class.</td></tr>
+    <tr><td><code>Interface</code></td><td>A classlike construct that contains only constants and abstract methods.</td></tr>
+    <tr><td><code>Abstract Class</code></td><td>Cannot create an Object from this class. Can contain abstract methods that will be defined in subclasses.</td></tr>
+    <tr><td><code>Non-Abstract Class</code></td><td>Can create an Object from this class. Cannot contain abstract methods.</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="section-num">6</span> Constructor Kuralları — T/F Tuzakları</h2>
+
+<table class="comparison-table">
+  <thead><tr><th>İfade</th><th>Doğru mu?</th><th>Not</th></tr></thead>
+  <tbody>
+    <tr><td>A default constructor is provided if none is explicitly defined</td><td><span class="yes">✅ DOĞRU</span></td><td>Hiç constructor yazılmamışsa Java no-arg sağlar</td></tr>
+    <tr><td>A constructor is used to create an object</td><td><span class="yes">✅ DOĞRU</span></td><td>new ClassName() ile çağrılır</td></tr>
+    <tr><td>The constructor must have the same name as its class</td><td><span class="yes">✅ DOĞRU</span></td><td>İsim farklı olursa constructor değil, metod olur</td></tr>
+    <tr><td>A class has exactly one constructor</td><td><span class="no">❌ YANLIŞ</span></td><td>Overloading ile birden fazla olabilir</td></tr>
+    <tr><td>All classes have a no-arg constructor</td><td><span class="no">❌ YANLIŞ</span></td><td>Başka constructor yazarsak default kaybolur</td></tr>
+    <tr><td>A constructor is not required to create an object</td><td><span class="no">❌ YANLIŞ</span></td><td>Constructor her zaman gerekli (default dahil)</td></tr>
+  </tbody>
+</table>
+
+<div class="alert alert-blue">
+  ℹ️ <strong>toString() ve Object class:</strong> Java'daki her class Object'ten miras alır. Object'in toString() metodu var ve println() çağrıldığında otomatik kullanılır. Override etmezsen "ClassName@hashcode" döner.
+</div>
+
+<div style="text-align:center; color:#475569; font-size:0.82em; margin-top:40px; padding-top:20px; border-top: 1px solid #1e2736;">
+  Gün 1 Dökümanı · CSE 102T · Gün 2 → Generics + Data Structures
+</div>
+
+</body>
+</html>

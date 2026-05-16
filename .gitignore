@@ -1,0 +1,38 @@
+# ─── OS Files ────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ─── Editor & IDE ────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# ─── Java Build Artifacts ────────────────────────────────
+*.class
+*.jar
+*.war
+*.ear
+out/
+build/
+target/
+bin/
+
+# ─── Logs & Temp ─────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+~$*
+
+# ─── Personal Notes (optional) ───────────────────────────
+notes_private/
+scratch/

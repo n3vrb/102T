@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Gün 2 — Generics · Data Structures · Sets & Maps</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; padding: 30px; max-width: 960px; margin: auto; }
+  h1 { color: #86efac; font-size: 1.7em; margin-bottom: 4px; }
+  .day-sub { color: #475569; font-size: 0.88em; margin-bottom: 30px; }
+  h2 { font-size: 1.15em; color: #f6c90e; margin: 30px 0 12px; padding-bottom: 6px; border-bottom: 1px solid #1e2736; }
+  h3 { font-size: 0.97em; color: #6ee7b7; margin: 18px 0 8px; }
+  p, li { color: #94a3b8; font-size: 0.9em; line-height: 1.75; }
+  ul { padding-left: 20px; margin-bottom: 10px; }
+  li { margin-bottom: 4px; }
+  code { background: #1e2736; color: #6ee7b7; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'Courier New', monospace; }
+
+  .code-block { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 10px; padding: 16px 20px; margin: 12px 0; overflow-x: auto; }
+  .code-block pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.88em; line-height: 1.7; white-space: pre; }
+  .keyword { color: #818cf8; font-weight: bold; }
+  .string { color: #86efac; }
+  .comment { color: #475569; font-style: italic; }
+  .type { color: #f9a8d4; }
+  .method { color: #67e8f9; }
+  .generic { color: #fde68a; }
+
+  .alert { border-radius: 8px; padding: 12px 16px; margin: 14px 0; font-size: 0.88em; line-height: 1.7; }
+  .alert-red { background: #1c0a0a; border-left: 3px solid #ef4444; color: #fca5a5; }
+  .alert-yellow { background: #1c1208; border-left: 3px solid #f59e0b; color: #fde68a; }
+  .alert-green { background: #0a1c0e; border-left: 3px solid #22c55e; color: #86efac; }
+  .alert-blue { background: #0a1220; border-left: 3px solid #3b82f6; color: #93c5fd; }
+
+  .comparison-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  .comparison-table th { background: #1e2736; color: #64748b; font-size: 0.8em; text-transform: uppercase; padding: 10px 14px; text-align: left; }
+  .comparison-table td { padding: 10px 14px; border-bottom: 1px solid #1e2736; font-size: 0.88em; color: #94a3b8; vertical-align: top; }
+  .comparison-table td:first-child { color: #e2e8f0; font-weight: 600; }
+  .yes { color: #86efac; font-weight: 700; }
+  .no { color: #f87171; font-weight: 700; }
+
+  .exercise-box { background: #0f1117; border: 1px solid #3730a3; border-radius: 10px; padding: 18px; margin: 16px 0; }
+  .exercise-box h4 { color: #818cf8; font-size: 0.9em; margin-bottom: 12px; }
+  .exercise-box .q { color: #e2e8f0; font-size: 0.88em; margin-bottom: 8px; font-weight: 600; }
+  .exercise-box .answer { background: #1e2736; border-radius: 6px; padding: 10px; margin-top: 8px; font-size: 0.85em; color: #64748b; }
+  .exercise-box .answer strong { color: #86efac; display: block; margin-bottom: 4px; }
+
+  .section-num { display: inline-block; background: #14532d; color: #86efac; border-radius: 50%; width: 26px; height: 26px; text-align: center; line-height: 26px; font-weight: 700; font-size: 0.85em; margin-right: 8px; }
+
+  .ds-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .ds-card { background: #1a1f2e; border-radius: 8px; padding: 12px; border: 1px solid #2d3748; }
+  .ds-card h4 { color: #6ee7b7; font-size: 0.88em; margin-bottom: 8px; }
+  .ds-card p { font-size: 0.82em; line-height: 1.6; }
+  .ds-card .tag { display: inline-block; background: #14532d; color: #86efac; padding: 2px 7px; border-radius: 10px; font-size: 0.75em; margin-top: 6px; }
+
+  .hier-box { background: #1a1f2e; border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-family: 'Courier New', monospace; font-size: 0.85em; line-height: 1.9; color: #94a3b8; border: 1px solid #2d3748; }
+  .hier-box .hl { color: #f6c90e; font-weight: bold; }
+  .hier-box .ok { color: #86efac; }
+
+  @media (max-width: 700px) { .ds-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>📗 Gün 2 — Generics · Data Structures · Sets & Maps</h1>
+<p class="day-sub">Chapter 19, 20, 21 (+ Ch22/23 özet) · Toplam 5 Saat · Sınav projesi için kritik altyapı</p>
+
+<!-- BÖLÜM 1 -->
+<h2><span class="section-num">1</span> Generics (Ch 19) ⚡ Sınav Projesi Temeli</h2>
+
+<h3>Neden Generics?</h3>
+<ul>
+  <li>Compile-time'da type safety sağlar</li>
+  <li>Cast yapmaya gerek kalmaz</li>
+  <li><strong>Primitive type kullanılamaz</strong> → wrapper class kullan</li>
+</ul>
+
+<div class="alert alert-red">
+  🔴 <strong>Sınavda kesin çıkan:</strong> <code>ArrayList&lt;int&gt;</code> → COMPILE ERROR!<br>
+  Doğrusu: <code>ArrayList&lt;Integer&gt;</code> — int yerine Integer, double yerine Double, boolean yerine Boolean.
+</div>
+
+<div class="code-block"><pre>
+<span class="comment">// ❌ HATALI — primitive type kullanılamaz</span>
+ArrayList<<span class="generic">int</span>> list = <span class="keyword">new</span> ArrayList<<span class="generic">int</span>>();   <span class="comment">// COMPILE ERROR!</span>
+
+<span class="comment">// ✅ DOĞRU — wrapper class kullan</span>
+ArrayList<<span class="generic">Integer</span>> list = <span class="keyword">new</span> ArrayList<<span class="generic">Integer</span>>();
+ArrayList<<span class="generic">String</span>> names = <span class="keyword">new</span> ArrayList<<span class="generic">String</span>>();
+</pre></div>
+
+<h3>Generic Class Tanımlama — Sınav Projesi Şablonu</h3>
+<div class="code-block"><pre>
+<span class="comment">// Tek type parameter</span>
+<span class="keyword">public class</span> <span class="type">Box</span><<span class="generic">T</span>> {
+    <span class="keyword">private</span> <span class="generic">T</span> value;
+    <span class="keyword">public</span> <span class="method">Box</span>(<span class="generic">T</span> value) { <span class="keyword">this</span>.value = value; }
+    <span class="keyword">public</span> <span class="generic">T</span> <span class="method">getValue</span>() { <span class="keyword">return</span> value; }
+}
+
+<span class="comment">// İki type parameter — Dictionary ve University tam bu şekilde!</span>
+<span class="keyword">public class</span> <span class="type">Dictionary</span><<span class="generic">K</span>, <span class="generic">V</span>> {
+    <span class="keyword">private</span> Map<<span class="generic">K</span>, <span class="generic">V</span>> map;
+
+    <span class="keyword">public</span> <span class="method">Dictionary</span>() {
+        map = <span class="keyword">new</span> HashMap<<span class="generic">K</span>, <span class="generic">V</span>>();
+    }
+
+    <span class="keyword">public</span> <span class="generic">V</span> <span class="method">get</span>(<span class="generic">K</span> key) {
+        <span class="keyword">if</span> (!map.containsKey(key))
+            <span class="keyword">throw new</span> <span class="type">KeyNotFoundException</span>(key);
+        <span class="keyword">return</span> map.get(key);
+    }
+
+    <span class="keyword">public</span> <span class="type">void</span> <span class="method">update</span>(<span class="generic">K</span> key, <span class="generic">V</span> value) {
+        map.put(key, value); <span class="comment">// put: varsa günceller, yoksa ekler</span>
+    }
+}
+
+<span class="comment">// Kullanım — farklı type kombinasyonları</span>
+Dictionary<<span class="generic">String</span>, <span class="generic">String</span>> d1 = <span class="keyword">new</span> Dictionary<<span class="generic">String</span>, <span class="generic">String</span>>();
+Dictionary<<span class="generic">Integer</span>, <span class="generic">Double</span>> d2 = <span class="keyword">new</span> Dictionary<<span class="generic">Integer</span>, <span class="generic">Double</span>>();
+</pre></div>
+
+<div class="exercise-box">
+  <h4>🧪 Pratik Sorular — Generics</h4>
+  <div class="q">S1: Hangisi compile error verir?<br>a) ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();<br>b) ArrayList&lt;int&gt; list = new ArrayList&lt;int&gt;();</div>
+  <div class="answer"><strong>b) verir</strong> — primitive type kullanılamaz</div>
+
+  <div class="q" style="margin-top:14px;">S2: <code>class Pair&lt;A, B&gt;</code> ile bir String-Integer çifti nasıl oluşturursun?</div>
+  <div class="answer"><strong>Pair&lt;String, Integer&gt; p = new Pair&lt;String, Integer&gt;("hello", 42);</strong></div>
+</div>
+
+<!-- BÖLÜM 2 -->
+<h2><span class="section-num">2</span> Data Structures — Java Collections Framework (Ch 20)</h2>
+
+<h3>Hiyerarşi — Bil, Ezberle</h3>
+<div class="hier-box">
+  <span class="hl">Collection&lt;E&gt;</span> (interface)
+  ├── <span class="hl">List&lt;E&gt;</span> (interface)
+  │   ├── <span class="ok">ArrayList</span> — dinamik dizi, index erişimi O(1)
+  │   └── <span class="ok">LinkedList</span> — çift yönlü liste, ekle/çıkar O(1)
+  ├── <span class="hl">Set&lt;E&gt;</span> (interface) — duplicate yok
+  │   ├── <span class="ok">HashSet</span> — sırasız
+  │   ├── <span class="ok">LinkedHashSet</span> — ekleme sıralı
+  │   └── <span class="ok">TreeSet</span> — doğal sıralı
+  └── <span class="hl">Queue&lt;E&gt;</span> (interface)
+      ├── <span class="ok">LinkedList</span> — Queue olarak da kullanılabilir
+      └── <span class="ok">PriorityQueue</span> — öncelik sıralı
+
+<span class="hl">Map&lt;K,V&gt;</span> (interface) — Collection değil!
+  ├── <span class="ok">HashMap</span> — sırasız
+  ├── <span class="ok">LinkedHashMap</span> — ekleme sıralı
+  └── <span class="ok">TreeMap</span> — key sıralı
+</div>
+
+<h3>Stack vs Queue — Sınavda Kesin Çıkıyor</h3>
+<table class="comparison-table">
+  <thead><tr><th>Özellik</th><th>Stack</th><th>Queue</th></tr></thead>
+  <tbody>
+    <tr><td>Yapı</td><td><strong>LIFO</strong> — Last In First Out</td><td><strong>FIFO</strong> — First In First Out</td></tr>
+    <tr><td>Örnek</td><td>Tabak yığını — son koyduğun ilk alınır</td><td>Kuyruğa girmek — ilk giren ilk çıkar</td></tr>
+    <tr><td>Java class</td><td><code>Stack&lt;E&gt;</code> (Vector'dan extend)</td><td>Interface: <code>Queue&lt;E&gt;</code></td></tr>
+    <tr><td>Ekle</td><td><code>push()</code></td><td><code>offer() / add()</code></td></tr>
+    <tr><td>Çıkar/Bak</td><td><code>pop() / peek()</code></td><td><code>poll() / peek()</code></td></tr>
+  </tbody>
+</table>
+
+<div class="alert alert-red">
+  🔴 <strong>Sınavda tuzak:</strong> "A Queue is a type of Last In First Out data structure" → <strong>FALSE!</strong> Queue FIFO'dur. Stack LIFO'dur.
+</div>
+
+<h3>Queue Implement Etmek İçin Hangi Yapılar Kullanılabilir?</h3>
+<p>Bütünleme sınavında "Which data structures could be used to implement a Queue?" diye soruldu:</p>
+<ul>
+  <li><span class="yes">✅ ArrayList</span> — index tabanlı, ön ve arka erişim mümkün</li>
+  <li><span class="yes">✅ Array</span> — circular array ile queue implement edilebilir</li>
+  <li><span class="yes">✅ LinkedList</span> — addLast/removeFirst ile FIFO</li>
+  <li><span class="no">❌ HashSet, HashMap, TreeSet, TreeMap</span> — sıra kavramı yok</li>
+  <li><span class="no">❌ Stack</span> — LIFO, Queue için uygun değil</li>
+</ul>
+
+<h3>ArrayList vs LinkedList</h3>
+<table class="comparison-table">
+  <thead><tr><th>Operasyon</th><th>ArrayList</th><th>LinkedList</th></tr></thead>
+  <tbody>
+    <tr><td>Index ile get(i)</td><td><span class="yes">O(1)</span></td><td><span class="no">O(n)</span></td></tr>
+    <tr><td>Başa/Ortaya ekleme</td><td><span class="no">O(n)</span></td><td><span class="yes">O(1)</span></td></tr>
+    <tr><td>Sona ekleme</td><td><span class="yes">O(1) amortized</span></td><td><span class="yes">O(1)</span></td></tr>
+    <tr><td>Stack/Queue için</td><td>Kullanılabilir</td><td>Daha uygun</td></tr>
+  </tbody>
+</table>
+
+<div class="code-block"><pre>
+<span class="comment">// LinkedList ile Queue kullanımı</span>
+Queue<<span class="generic">String</span>> queue = <span class="keyword">new</span> LinkedList<<span class="generic">String</span>>();
+queue.offer(<span class="string">"first"</span>);
+queue.offer(<span class="string">"second"</span>);
+System.out.println(queue.poll()); <span class="comment">// "first" — FIFO</span>
+
+<span class="comment">// Stack kullanımı</span>
+Stack<<span class="generic">Integer</span>> stack = <span class="keyword">new</span> Stack<<span class="generic">Integer</span>>();
+stack.push(1);
+stack.push(2);
+System.out.println(stack.pop()); <span class="comment">// 2 — LIFO</span>
+</pre></div>
+
+<!-- BÖLÜM 3 -->
+<h2><span class="section-num">3</span> Sets (Ch 21)</h2>
+
+<div class="ds-grid">
+  <div class="ds-card">
+    <h4>HashSet</h4>
+    <p>Duplicate yok. Sırasız (hash tabanlı). add/remove/contains hepsi O(1).</p>
+    <p class="tag">Sıra önemli değilse</p>
+  </div>
+  <div class="ds-card">
+    <h4>LinkedHashSet</h4>
+    <p>Duplicate yok. Ekleme sırası korunur. HashSet'ten biraz yavaş.</p>
+    <p class="tag">Eklenme sırası lazımsa</p>
+  </div>
+  <div class="ds-card">
+    <h4>TreeSet</h4>
+    <p>Duplicate yok. Doğal sıralı (Comparable). add/remove/contains O(log n).</p>
+    <p class="tag">Sıralı tutmak gerekiyorsa</p>
+  </div>
+</div>
+
+<div class="code-block"><pre>
+Set<<span class="generic">String</span>> set = <span class="keyword">new</span> HashSet<<span class="generic">String</span>>();
+set.add(<span class="string">"apple"</span>);
+set.add(<span class="string">"banana"</span>);
+set.add(<span class="string">"apple"</span>);   <span class="comment">// Duplicate — eklenmez</span>
+System.out.println(set.size());          <span class="comment">// 2</span>
+System.out.println(set.contains(<span class="string">"apple"</span>)); <span class="comment">// true</span>
+
+<span class="keyword">for</span> (<span class="type">String</span> s : set) {
+    System.out.println(s); <span class="comment">// Sırasız çıkabilir</span>
+}
+</pre></div>
+
+<!-- BÖLÜM 4 -->
+<h2><span class="section-num">4</span> Maps (Ch 21) ⚡ Sınav Projesi İçin En Önemli</h2>
+
+<h3>Map Türleri</h3>
+<div class="ds-grid">
+  <div class="ds-card">
+    <h4>HashMap&lt;K,V&gt;</h4>
+    <p>Sırasız. put/get/containsKey O(1). Sınav projelerinde en sık kullanılan.</p>
+    <p class="tag">Genel kullanım</p>
+  </div>
+  <div class="ds-card">
+    <h4>LinkedHashMap&lt;K,V&gt;</h4>
+    <p>Ekleme sırası korunur. Dictionary projesindeki toString() çıktısında sıra önemli.</p>
+    <p class="tag">Sıra önemli</p>
+  </div>
+  <div class="ds-card">
+    <h4>TreeMap&lt;K,V&gt;</h4>
+    <p>Key'e göre sıralı. Comparable implementi gerekebilir. O(log n).</p>
+    <p class="tag">Key sırası lazım</p>
+  </div>
+</div>
+
+<h3>Kritik Map Metodları — Sınav Projesinde Bunlar Kullanılıyor</h3>
+<div class="code-block"><pre>
+Map<<span class="generic">String</span>, <span class="generic">Integer</span>> map = <span class="keyword">new</span> HashMap<<span class="generic">String</span>, <span class="generic">Integer</span>>();
+
+<span class="comment">// Ekleme / Güncelleme (ikisi için de put kullanılır!)</span>
+map.put(<span class="string">"Ali"</span>, 90);    <span class="comment">// yeni ekle</span>
+map.put(<span class="string">"Ali"</span>, 95);    <span class="comment">// güncelle — eski değer üstüne yazar</span>
+
+<span class="comment">// Okuma</span>
+map.get(<span class="string">"Ali"</span>);        <span class="comment">// 95</span>
+map.containsKey(<span class="string">"Ali"</span>); <span class="comment">// true</span>
+map.containsKey(<span class="string">"Veli"</span>); <span class="comment">// false</span>
+
+<span class="comment">// Key ve Value koleksiyonları</span>
+Set<<span class="generic">String</span>> keys = map.keySet();          <span class="comment">// tüm keyler</span>
+Collection<<span class="generic">Integer</span>> values = map.values(); <span class="comment">// tüm değerler</span>
+
+<span class="comment">// Iterate — Map.Entry</span>
+<span class="keyword">for</span> (Map.Entry<<span class="generic">String</span>, <span class="generic">Integer</span>> entry : map.entrySet()) {
+    System.out.println(entry.getKey() + <span class="string">" = "</span> + entry.getValue());
+}
+
+<span class="comment">// toString formatı sınav projesinde istenen format: {K=V, K=V}</span>
+System.out.println(map); <span class="comment">// {Ali=95} — HashMap'in built-in toString'i bu formatı verir!</span>
+</pre></div>
+
+<div class="alert alert-green">
+  💡 <strong>Sınav İpucu:</strong> Dictionary projesinin toString() metodunda <code>"{K=V, ...}"</code> formatı isteniyor. HashMap'in kendi <code>toString()</code> metodu tam bu formatı üretiyor! Yani sadece <code>return map.toString();</code> yazabilirsin.
+</div>
+
+<h3>Nested Map — University Projesinin Kalbi</h3>
+<div class="code-block"><pre>
+<span class="comment">// University&lt;S, C, G&gt; — öğrenci → (ders → not) haritası</span>
+<span class="comment">// S = öğrenci tipi, C = ders tipi, G = not tipi</span>
+Map<<span class="generic">S</span>, Map<<span class="generic">C</span>, <span class="generic">G</span>>> studentCourseGrade;
+
+<span class="comment">// Örnek: Long student ID → String course → Integer grade</span>
+Map<<span class="generic">Long</span>, Map<<span class="generic">String</span>, <span class="generic">Integer</span>>> data = <span class="keyword">new</span> LinkedHashMap<>();
+
+<span class="comment">// register: öğrenci yoksa yeni map ekle, dersi null ile koy</span>
+<span class="keyword">public void</span> <span class="method">register</span>(<span class="generic">S</span> student, <span class="generic">C</span> course) {
+    data.putIfAbsent(student, <span class="keyword">new</span> LinkedHashMap<>());
+    data.get(student).put(course, <span class="keyword">null</span>); <span class="comment">// not henüz yok</span>
+}
+
+<span class="comment">// grade: öğrenci yoksa StudentNotFoundException, ders yoksa CourseNotFoundException</span>
+<span class="keyword">public void</span> <span class="method">grade</span>(<span class="generic">S</span> student, <span class="generic">C</span> course, <span class="generic">G</span> grade) {
+    <span class="keyword">if</span> (!data.containsKey(student)) <span class="keyword">throw new</span> StudentNotFoundException(student);
+    <span class="keyword">if</span> (!data.get(student).containsKey(course)) <span class="keyword">throw new</span> CourseNotFoundException(course);
+    data.get(student).put(course, grade);
+}
+
+<span class="comment">// transcript: "N/A" göster eğer not null ise</span>
+<span class="keyword">public</span> <span class="type">String</span> <span class="method">transcript</span>(<span class="generic">S</span> student) {
+    StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+    sb.append(<span class="string">"Transcript for Student "</span> + student + <span class="string">"\n"</span>);
+    <span class="keyword">for</span> (Map.Entry<<span class="generic">C</span>, <span class="generic">G</span>> e : data.get(student).entrySet()) {
+        <span class="type">String</span> grade = (e.getValue() == <span class="keyword">null</span>) ? <span class="string">"N/A"</span> : e.getValue().toString();
+        sb.append(e.getKey() + <span class="string">" - "</span> + grade + <span class="string">"\n"</span>);
+    }
+    <span class="keyword">return</span> sb.toString();
+}
+</pre></div>
+
+<!-- BÖLÜM 5 -->
+<h2><span class="section-num">5</span> Sorting & Algoritma Karmaşıklığı Özeti (Ch 22, 23)</h2>
+
+<table class="comparison-table">
+  <thead><tr><th>Algoritma</th><th>Best</th><th>Average</th><th>Worst</th><th>Not</th></tr></thead>
+  <tbody>
+    <tr><td>Bubble Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>Basit, yavaş</td></tr>
+    <tr><td>Selection Sort</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td><td>Her zaman n² karşılaştırma</td></tr>
+    <tr><td>Insertion Sort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>Küçük veride iyi</td></tr>
+    <tr><td>Merge Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>Garantili, extra bellek</td></tr>
+    <tr><td>Quick Sort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>Pratikte hızlı</td></tr>
+    <tr><td>Binary Search</td><td>O(1)</td><td>O(log n)</td><td>O(log n)</td><td>Sıralı dizide çalışır</td></tr>
+    <tr><td>Linear Search</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>Sırasız dizide</td></tr>
+  </tbody>
+</table>
+
+<div class="alert alert-blue">
+  ℹ️ Ch22/23 sınavda büyük kodlama olarak çıkmadı ama T/F veya MCQ'da sorulabilir. Big-O notasyonunu ve en yaygın sıralama isimlerini bil.
+</div>
+
+<div class="exercise-box">
+  <h4>🧪 Pratik Sorular — Data Structures & Collections</h4>
+  <div class="q">S1: HashSet, LinkedHashSet ve TreeSet arasında ne fark var?</div>
+  <div class="answer"><strong>HashSet:</strong> sırasız. <strong>LinkedHashSet:</strong> ekleme sıralı. <strong>TreeSet:</strong> doğal sıralı (Comparable). Hepsi duplicate kabul etmez.</div>
+
+  <div class="q" style="margin-top:14px;">S2: Queue implementasyonu için hangi Java yapıları kullanılabilir? (Sınav sorusu!)</div>
+  <div class="answer"><strong>ArrayList, Array, LinkedList</strong> — HashSet/HashMap/Stack kullanılamaz.</div>
+
+  <div class="q" style="margin-top:14px;">S3: map.put("key", null) ne yapar?</div>
+  <div class="answer">Key'i ekler ama değeri null olarak tutar. containsKey() true döner. University projesinde register() yapılıp henüz not verilmemiş dersler için bu kullanılır (N/A göstermek için).</div>
+
+  <div class="q" style="margin-top:14px;">S4: <code>Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();</code> — <code>map.toString()</code> ne döner?</div>
+  <div class="answer"><strong>{key1=val1, key2=val2}</strong> formatında String döner. Dictionary projesinin toString() için bunu doğrudan kullanabilirsin!</div>
+</div>
+
+<div style="text-align:center; color:#475569; font-size:0.82em; margin-top:40px; padding-top:20px; border-top: 1px solid #1e2736;">
+  Gün 2 Dökümanı · CSE 102T · Gün 3 → Proje Pratiği + Mock Sınav
+</div>
+
+</body>
+</html>

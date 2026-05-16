@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>CSE 102T — 3 Günlük Çalışma Planı</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; padding: 30px; }
+  h1 { text-align: center; font-size: 2em; color: #f6c90e; margin-bottom: 6px; }
+  .subtitle { text-align: center; color: #94a3b8; margin-bottom: 30px; font-size: 0.95em; }
+  .warning-box { background: #1e1b4b; border-left: 4px solid #818cf8; padding: 14px 18px; border-radius: 8px; margin-bottom: 30px; font-size: 0.93em; line-height: 1.7; }
+  .warning-box strong { color: #a5b4fc; }
+
+  .day-card { background: #1a1f2e; border-radius: 14px; margin-bottom: 28px; overflow: hidden; border: 1px solid #2d3748; }
+  .day-header { padding: 16px 22px; display: flex; align-items: center; gap: 14px; }
+  .day-header.d1 { background: linear-gradient(135deg, #1a365d, #2b4c7e); }
+  .day-header.d2 { background: linear-gradient(135deg, #1a3a1a, #2d5a27); }
+  .day-header.d3 { background: linear-gradient(135deg, #3d1a1a, #6b2323); }
+  .day-num { font-size: 2.2em; font-weight: 900; opacity: 0.3; }
+  .day-title { font-size: 1.2em; font-weight: 700; }
+  .day-focus { font-size: 0.82em; color: #94a3b8; margin-top: 3px; }
+  .day-badge { margin-left: auto; background: rgba(255,255,255,0.12); padding: 4px 12px; border-radius: 20px; font-size: 0.8em; white-space: nowrap; }
+
+  .schedule-table { width: 100%; border-collapse: collapse; }
+  .schedule-table th { background: #0f1117; color: #64748b; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 16px; text-align: left; }
+  .schedule-table td { padding: 12px 16px; border-bottom: 1px solid #1e2736; font-size: 0.9em; vertical-align: top; }
+  .schedule-table tr:last-child td { border-bottom: none; }
+  .schedule-table tr:hover td { background: #1e2736; }
+
+  .time-col { color: #f6c90e; font-weight: 700; white-space: nowrap; width: 110px; }
+  .topic-col { font-weight: 600; color: #e2e8f0; }
+  .detail-col { color: #94a3b8; font-size: 0.87em; line-height: 1.6; }
+  .file-col { white-space: nowrap; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.75em; font-weight: 600; margin-right: 4px; }
+  .badge-red { background: #7f1d1d; color: #fca5a5; }
+  .badge-yellow { background: #713f12; color: #fde68a; }
+  .badge-green { background: #14532d; color: #86efac; }
+  .badge-blue { background: #1e3a5f; color: #93c5fd; }
+  .badge-purple { background: #3b0764; color: #d8b4fe; }
+
+  .break-row td { background: #0a0d14 !important; color: #475569; font-style: italic; text-align: center; padding: 8px; font-size: 0.82em; }
+
+  .priority-legend { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 22px 18px; }
+  .priority-legend span { font-size: 0.8em; }
+
+  .chapter-map { padding: 18px 22px; border-top: 1px solid #1e2736; background: #0f1117; }
+  .chapter-map h4 { color: #64748b; font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .ch-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ch-tag { padding: 5px 12px; border-radius: 8px; font-size: 0.8em; font-weight: 600; }
+
+  .exam-tips { background: #1a1f2e; border-radius: 14px; padding: 22px; border: 1px solid #2d3748; margin-bottom: 28px; }
+  .exam-tips h2 { color: #f6c90e; margin-bottom: 16px; font-size: 1.1em; }
+  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .tip-item { background: #0f1117; padding: 14px; border-radius: 10px; border-left: 3px solid; }
+  .tip-item.t1 { border-color: #ef4444; }
+  .tip-item.t2 { border-color: #f59e0b; }
+  .tip-item.t3 { border-color: #22c55e; }
+  .tip-item.t4 { border-color: #818cf8; }
+  .tip-item h3 { font-size: 0.88em; margin-bottom: 6px; }
+  .tip-item p { color: #94a3b8; font-size: 0.82em; line-height: 1.6; }
+  .tip-item code { background: #1e2736; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; color: #a5b4fc; }
+
+  .file-link { display: inline-block; background: #1e3a5f; color: #93c5fd; padding: 4px 10px; border-radius: 6px; font-size: 0.8em; font-weight: 600; text-decoration: none; }
+
+  @media (max-width: 700px) { .tips-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>📚 CSE 102T — 3 Günlük Çalışma Planı</h1>
+<p class="subtitle">Final & Bütünleme Sınav Analizi Tabanlı · Günlük 5 Saat · Toplam 15 Saat</p>
+
+<div class="warning-box">
+  <strong>⚠️ Sınav Yapısı Hatırlatma:</strong> Her sınav 4 bölümden oluşuyor —
+  <strong>① Kavramsal sorular</strong> (T/F veya çoktan seçmeli) →
+  <strong>② Terim eşleştirme veya hata bulma</strong> →
+  <strong>③ Referans/eşitlik fill-in-the-blanks</strong> (hocanın en sevdiği soru tipi!) →
+  <strong>④ Büyük kodlama projesi</strong> (eve ödev, Moodle'a submit).
+  Bu plan bölümlere göre ağırlıklandırılmıştır.
+</div>
+
+<!-- SINAV İPUÇLARI -->
+<div class="exam-tips">
+  <h2>🎯 Her Sınavda Kesin Çıkan Konular (Her İkisinde de Göründü)</h2>
+  <div class="tips-grid">
+    <div class="tip-item t1">
+      <h3>🔴 #1 KRİTİK — <code>== vs .equals()</code></h3>
+      <p>Hem final hem bütünlemede ağır puanlı. 4 kombinasyonu ezberle:<br>
+      <code>false/true</code> → farklı obje, aynı içerik<br>
+      <code>false/false</code> → farklı obje, farklı içerik<br>
+      <code>true/true</code> → aynı referans<br>
+      <code>true/false</code> → SADECE custom class ile mümkün! (equals() override)</p>
+    </div>
+    <div class="tip-item t2">
+      <h3>🟡 #2 — Abstract Class Tuzakları</h3>
+      <p>Her sınavda yanlış yapılan soru:<br>
+      ✅ Can have abstract methods<br>
+      ✅ Can have non-abstract (concrete) methods<br>
+      ✅ Cannot be instantiated<br>
+      ❌ "Must have abstract methods" → YANLIŞ<br>
+      ❌ "Cannot have concrete methods" → YANLIŞ</p>
+    </div>
+    <div class="tip-item t3">
+      <h3>🟢 #3 — Generics</h3>
+      <p><code>ArrayList&lt;int&gt;</code> → COMPILE ERROR (primitive yasak)<br>
+      <code>ArrayList&lt;Integer&gt;</code> → doğru<br>
+      Proje ödevi her seferinde generic class tasarımı istiyor.<br>
+      <code>class MyClass&lt;K, V&gt; { ... }</code></p>
+    </div>
+    <div class="tip-item t4">
+      <h3>🔵 #4 — Constructor + Inheritance</h3>
+      <p>Parent'ta no-arg constructor yoksa child'da <code>super(args)</code> zorunlu.<br>
+      Constructor kuralları:<br>
+      ✅ Default sağlanır, eğer hiç yazılmamışsa<br>
+      ✅ Sınıfla aynı isim<br>
+      ❌ "Tam olarak bir constructor" → YANLIŞ (overload mümkün)</p>
+    </div>
+  </div>
+</div>
+
+<!-- GÜN 1 -->
+<div class="day-card">
+  <div class="day-header d1">
+    <div class="day-num">1</div>
+    <div>
+      <div class="day-title">OOP Temeli + Inheritance + Abstract/Interface + Exception</div>
+      <div class="day-focus">Chapters: 9, 10, 11, 12, 13 · Sınav bölümleri: ①②③ için temel</div>
+    </div>
+    <div class="day-badge">5 Saat · ~17:00</div>
+  </div>
+  <div class="priority-legend">
+    <span><span class="badge badge-red">ÇOK KRİTİK</span> Sınavda kesin çıkar</span>
+    <span><span class="badge badge-yellow">KRİTİK</span> Muhtemelen çıkar</span>
+    <span><span class="badge badge-green">BİL</span> Genel kavram</span>
+  </div>
+  <table class="schedule-table">
+    <thead><tr><th>Saat</th><th>Konu</th><th>Ne Çalışacaksın</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-col">09:00–10:00</td>
+        <td class="topic-col"><span class="badge badge-red">ÇOK KRİTİK</span><br>== vs .equals()<br>Referans Semantiği</td>
+        <td class="detail-col">
+          Ch9 & Ch11'den: primitive vs reference type farkı · String pool vs heap · <code>new String("x")</code> her zaman yeni obje oluşturur · <code>==</code> adresi karşılaştırır, <code>.equals()</code> içeriği · 4 kombinasyonu çöz · Gün1 dökümanı Bölüm 1'i oku ve tüm egzersizleri yap
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">10:10–11:10</td>
+        <td class="topic-col"><span class="badge badge-red">ÇOK KRİTİK</span><br>Inheritance &<br>super() Kuralları</td>
+        <td class="detail-col">
+          Ch11: extends keyword · method override vs overload · super() constructor çağırma zorunluluğu · polymorphism · dynamic binding · protected modifier · final class/method · Gün1 dökümanı Bölüm 2'yi oku
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">11:20–12:20</td>
+        <td class="topic-col"><span class="badge badge-red">ÇOK KRİTİK</span><br>Abstract Class<br>& Interface</td>
+        <td class="detail-col">
+          Ch13: abstract method vs concrete method farkı · instantiation yasağı · interface: sadece constants + abstract methods · abstract class vs interface farkı tablosu · implements vs extends · Gün1 dökümanı Bölüm 3'ü oku + tuzak soruları çöz
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">🍽️ 30 dk öğle molası</td></tr>
+      <tr>
+        <td class="time-col">12:50–13:50</td>
+        <td class="topic-col"><span class="badge badge-yellow">KRİTİK</span><br>Exception Handling<br>& Custom Exception</td>
+        <td class="detail-col">
+          Ch12: try-catch-finally · checked vs unchecked exception · RuntimeException vs Exception · custom exception class yazımı · throw vs throws · Sınav projesinde her seferinde özel exception isteniyor! → KeyNotFoundException, StudentNotFoundException pattern'ını öğren
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">14:00–15:00</td>
+        <td class="topic-col"><span class="badge badge-green">BİL</span><br>OOP Kavramları +<br>Gün Sonu Pratik</td>
+        <td class="detail-col">
+          Ch9/10: encapsulation, constructor overloading, static vs instance, this keyword, toString() override · Sonra: final ve bütünleme sınavlarının bölüm 1-2 sorularını baştan çöz, cevaplarını kontrol et · Gün1 dökümanındaki tüm pratik soruları bitir
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="chapter-map">
+    <h4>Bu gün kapatılan chapter'lar</h4>
+    <div class="ch-list">
+      <span class="ch-tag" style="background:#1e3a5f;color:#93c5fd;">Ch9 Objects & Classes</span>
+      <span class="ch-tag" style="background:#1e3a5f;color:#93c5fd;">Ch10 Thinking in Objects</span>
+      <span class="ch-tag" style="background:#1e3a5f;color:#93c5fd;">Ch11 Inheritance & Polymorphism</span>
+      <span class="ch-tag" style="background:#1e3a5f;color:#93c5fd;">Ch12 Exceptions & Text I/O</span>
+      <span class="ch-tag" style="background:#1e3a5f;color:#93c5fd;">Ch13 Abstract Classes & Interfaces</span>
+    </div>
+  </div>
+</div>
+
+<!-- GÜN 2 -->
+<div class="day-card">
+  <div class="day-header d2">
+    <div class="day-num">2</div>
+    <div>
+      <div class="day-title">Generics + Data Structures + Sets & Maps</div>
+      <div class="day-focus">Chapters: 19, 20, 21 · Sınav projesi için temel altyapı</div>
+    </div>
+    <div class="day-badge">5 Saat · ~17:00</div>
+  </div>
+  <div class="priority-legend">
+    <span><span class="badge badge-red">ÇOK KRİTİK</span> Sınavda kesin çıkar</span>
+    <span><span class="badge badge-yellow">KRİTİK</span> Muhtemelen çıkar</span>
+    <span><span class="badge badge-green">BİL</span> Genel kavram</span>
+  </div>
+  <table class="schedule-table">
+    <thead><tr><th>Saat</th><th>Konu</th><th>Ne Çalışacaksın</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-col">09:00–10:00</td>
+        <td class="topic-col"><span class="badge badge-red">ÇOK KRİTİK</span><br>Generics Temeli</td>
+        <td class="detail-col">
+          Ch19: neden generics? · type parameter <code>&lt;T&gt;</code>, <code>&lt;K,V&gt;</code> · generic class tanımlama · generic method · primitive type yasak (int → Integer) · wildcard <code>&lt;?&gt;</code> · type erasure · raw type uyarısı · Gün2 dökümanı Bölüm 1'i oku
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">10:10–11:10</td>
+        <td class="topic-col"><span class="badge badge-red">ÇOK KRİTİK</span><br>Data Structures<br>ArrayList, LinkedList,<br>Stack, Queue</td>
+        <td class="detail-col">
+          Ch20: Java Collections Framework hiyerarşisi · ArrayList vs LinkedList karşılaştırması · Stack (LIFO) vs Queue (FIFO) · PriorityQueue · Queue implement etmek için hangi yapılar kullanılabilir: ArrayList ✅, Array ✅, LinkedList ✅ · Stack sadece Vector'den extend eder · Iterator kullanımı
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">11:20–12:20</td>
+        <td class="topic-col"><span class="badge badge-yellow">KRİTİK</span><br>Sets: HashSet,<br>LinkedHashSet,<br>TreeSet</td>
+        <td class="detail-col">
+          Ch21: Set → duplicate yok · HashSet: sırasız, O(1) · LinkedHashSet: ekleme sıralı · TreeSet: sıralı (Comparable) · ne zaman hangisi? · contains(), add(), remove() · for-each ile iterate
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">🍽️ 30 dk öğle molası</td></tr>
+      <tr>
+        <td class="time-col">12:50–13:50</td>
+        <td class="topic-col"><span class="badge badge-red">ÇOK KRİTİK</span><br>Maps: HashMap,<br>LinkedHashMap,<br>TreeMap</td>
+        <td class="detail-col">
+          Ch21: Map → key-value · HashMap: sırasız · LinkedHashMap: ekleme sıralı · TreeMap: key'e göre sıralı · containsKey(), get(), put(), keySet(), values(), entrySet() · Map.Entry kullanımı · Sınav projesinde Dictionary ve University hep Map kullanıyor!
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">14:00–15:00</td>
+        <td class="topic-col"><span class="badge badge-yellow">KRİTİK</span><br>Sorting + Karmaşıklık<br>+ Gün Sonu Pratik</td>
+        <td class="detail-col">
+          Ch22/23'ten hızlı geçiş: bubble sort, selection sort, merge sort, binary search · Big-O notasyonu özet · Sonra: Gün2 dökümanındaki pratik soruları bitir · Bütünleme sınav Q3 tipindeki "hangi yapı Queue için kullanılır?" sorularını çöz
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="chapter-map">
+    <h4>Bu gün kapatılan chapter'lar</h4>
+    <div class="ch-list">
+      <span class="ch-tag" style="background:#1a3a1a;color:#86efac;">Ch19 Generics</span>
+      <span class="ch-tag" style="background:#1a3a1a;color:#86efac;">Ch20 Data Structures</span>
+      <span class="ch-tag" style="background:#1a3a1a;color:#86efac;">Ch21 Sets & Maps</span>
+      <span class="ch-tag" style="background:#1a3a1a;color:#86efac;">Ch22 Efficient Algorithms (özet)</span>
+      <span class="ch-tag" style="background:#1a3a1a;color:#86efac;">Ch23 Sorting (özet)</span>
+    </div>
+  </div>
+</div>
+
+<!-- GÜN 3 -->
+<div class="day-card">
+  <div class="day-header d3">
+    <div class="day-num">3</div>
+    <div>
+      <div class="day-title">Proje Pratiği + Tam Mock Sınav</div>
+      <div class="day-focus">Generic class tasarımı · Exception yazma · Sınav simülasyonu</div>
+    </div>
+    <div class="day-badge">5 Saat · ~17:00</div>
+  </div>
+  <div class="priority-legend">
+    <span><span class="badge badge-purple">PROJE</span> Büyük kodlama sorusu hazırlığı</span>
+    <span><span class="badge badge-red">MOCK</span> Sınav simülasyonu</span>
+  </div>
+  <table class="schedule-table">
+    <thead><tr><th>Saat</th><th>Konu</th><th>Ne Çalışacaksın</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="time-col">09:00–10:30</td>
+        <td class="topic-col"><span class="badge badge-purple">PROJE</span><br>Generic Class Tasarımı<br>— Dictionary Pattern</td>
+        <td class="detail-col">
+          Finalin Dictionary sorusunu sıfırdan yaz: <code>class Dictionary&lt;K,V&gt;</code> · HashMap kullan · get(), update(), copy(), keys(), toString() metodları · KeyNotFoundException yaz · İki versiyon: biri HashMap, biri Array/ArrayList ile · Gün3 dökümanındaki şablonla karşılaştır
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">10:40–12:10</td>
+        <td class="topic-col"><span class="badge badge-purple">PROJE</span><br>Generic Class Tasarımı<br>— University Pattern</td>
+        <td class="detail-col">
+          Bütünlemenin University sorusunu sıfırdan yaz: <code>class University&lt;S,C,G&gt;</code> · register(), grade(), students(), transcript(), toString() · StudentNotFoundException + CourseNotFoundException · İki constructor (isimli, isimsiz) · Gün3 dökümanındaki expected output ile karşılaştır
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">🍽️ 30 dk öğle molası</td></tr>
+      <tr>
+        <td class="time-col">12:40–13:40</td>
+        <td class="topic-col"><span class="badge badge-red">MOCK</span><br>Mock Sınav Bölüm 1-2<br>(Kavramsal + Hata Bulma)</td>
+        <td class="detail-col">
+          Gün3 dökümanındaki tam mock sınavı çöz (T/F + çoktan seçmeli + hata bulma) · Süreyi tut (30 dk max) · Cevapları kontrol et · Yanlış yaptıklarını işaretle ve 10 dk tekrar et
+        </td>
+      </tr>
+      <tr class="break-row"><td colspan="3">☕ 10 dk mola</td></tr>
+      <tr>
+        <td class="time-col">13:50–15:00</td>
+        <td class="topic-col"><span class="badge badge-red">MOCK</span><br>Mock Sınav Bölüm 3<br>(Fill-in-the-blanks)</td>
+        <td class="detail-col">
+          Gün3 dökümanındaki referans/eşitlik sorularını çöz · Her kombinasyonu elle yaz · "Bu output için hangi class gerekir?" sorusunu düşün · Kendi Butunleme class'ını yaz · Tüm sınavı gözden geçir, zayıf nokta var mı?
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="chapter-map">
+    <h4>Bu gün tamamlanan</h4>
+    <div class="ch-list">
+      <span class="ch-tag" style="background:#3d1a1a;color:#fca5a5;">Proje: Dictionary pattern</span>
+      <span class="ch-tag" style="background:#3d1a1a;color:#fca5a5;">Proje: University pattern</span>
+      <span class="ch-tag" style="background:#3d1a1a;color:#fca5a5;">Mock Sınav: T/F + MCQ</span>
+      <span class="ch-tag" style="background:#3d1a1a;color:#fca5a5;">Mock Sınav: Fill-in-the-blanks</span>
+      <span class="ch-tag" style="background:#3d1a1a;color:#fca5a5;">Tüm zayıf nokta revizyonu</span>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; color:#475569; font-size:0.82em; margin-top:20px;">
+  CSE 102T · Joseph LEDET · Akdeniz University · Hazırlandığı tarih: 2026
+</div>
+
+</body>
+</html>
